@@ -119,9 +119,6 @@ export default connect(state => {
   const totalCredit = balance.reduce((acc, entry) => acc + entry.CREDIT, 0);
   const totalDebit = balance.reduce((acc, entry) => acc + entry.DEBIT, 0);
 
-  console.log(balance);
-  console.log(state);
-
   return {
     balance,
     totalCredit,
