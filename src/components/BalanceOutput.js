@@ -95,7 +95,10 @@ export default connect(state => {
   });
 
   state.journalEntries.forEach((journalEntry) => {
-    if (journalEntry.PERIOD >= startPeriod && journalEntry.PERIOD <= endPeriod) {
+    console.log(startPeriod, !!startPeriod, startPeriod === 'Invalid Date');
+    const start = isNaN(startPeriod) ? true : journalEntry.PERIOD >= startPeriod;
+    const end = isNaN(endPeriod) ? true : journalEntry.PERIOD <= endPeriod;
+    if (start && end) {
       balance.forEach((account) => {
         if (account.ACCOUNT === journalEntry.ACCOUNT) {
           if (journalEntry.DEBIT) {
@@ -113,6 +116,9 @@ export default connect(state => {
 
   const totalCredit = balance.reduce((acc, entry) => acc + entry.CREDIT, 0);
   const totalDebit = balance.reduce((acc, entry) => acc + entry.DEBIT, 0);
+
+  console.log(balance);
+  console.log(state);
 
   return {
     balance,
