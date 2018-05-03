@@ -77,19 +77,45 @@ BalanceOutput.propTypes = {
 
 export default connect(state => {
   let balance = [];
-  const { userInput: { startAccount, endAccount } } = state;
-  console.log(state, startAccount, endAccount);
+
+  console.log(state);
+
+  const { userInput: { startAccount, endAccount, startPeriod, endPeriod } } = state;
+
   balance = state.accounts.filter((account) => {
     return account.ACCOUNT >= startAccount && account.ACCOUNT <= endAccount;
   });
-  console.log(balance);
+
   balance = balance.map((account) => {
     account.BALANCE = 0;
+    account.DEBIT = 0;
+    account.CREDIT = 0;
     account.DESCRIPTION = account.LABEL;
     delete account.LABEL;
     return account;
   });
+
   console.log(balance);
+
+  const startDate = new Date(startPeriod);
+  const endDate = new Date(endPeriod);
+
+  state.journalEntries.forEach((journalEntry) => {
+    if (journalEntry.PERIOD >= startPeriod && journalEntry.PERIOD <= endPeriod) {
+      balance.forEach((account) => {
+        if (account.ACCOUNT === journalEntry.ACCOUNT) {
+          if (journalEntry.DEBIT) {
+            account.BALANCE += journalEntry.DEBIT;
+            account.DEBIT += journalEntry.DEBIT;
+          }
+          if (journalEntry.CREDIT) {
+            account.BALANCE -= journalEntry.CREDIT;
+            account.CREDIT += journalEntry.CREDIT;
+          }
+        }
+      });
+    }
+  });
 
   /* YOUR CODE GOES HERE */
 
