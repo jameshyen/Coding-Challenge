@@ -81,7 +81,9 @@ export default connect(state => {
   const { userInput: { startAccount, endAccount, startPeriod, endPeriod } } = state;
 
   balance = state.accounts.filter((account) => {
-    return account.ACCOUNT >= startAccount && account.ACCOUNT <= endAccount;
+    const start = isNaN(startAccount) ? true : account.ACCOUNT >= startAccount;
+    const end = isNaN(endAccount) ? true : account.ACCOUNT <= endAccount;
+    return start && end;
   });
 
   balance = balance.map((account) => {
@@ -95,9 +97,9 @@ export default connect(state => {
   });
 
   state.journalEntries.forEach((journalEntry) => {
-    console.log(startPeriod, !!startPeriod, startPeriod === 'Invalid Date');
     const start = isNaN(startPeriod) ? true : journalEntry.PERIOD >= startPeriod;
     const end = isNaN(endPeriod) ? true : journalEntry.PERIOD <= endPeriod;
+
     if (start && end) {
       balance.forEach((account) => {
         if (account.ACCOUNT === journalEntry.ACCOUNT) {
