@@ -78,8 +78,6 @@ BalanceOutput.propTypes = {
 export default connect(state => {
   let balance = [];
 
-  console.log(state);
-
   const { userInput: { startAccount, endAccount, startPeriod, endPeriod } } = state;
 
   balance = state.accounts.filter((account) => {
@@ -87,18 +85,14 @@ export default connect(state => {
   });
 
   balance = balance.map((account) => {
-    account.BALANCE = 0;
-    account.DEBIT = 0;
-    account.CREDIT = 0;
-    account.DESCRIPTION = account.LABEL;
-    delete account.LABEL;
-    return account;
+    const newAccount = Object.assign({}, account);
+    newAccount.BALANCE = 0;
+    newAccount.DEBIT = 0;
+    newAccount.CREDIT = 0;
+    newAccount.DESCRIPTION = account.LABEL;
+    delete newAccount.LABEL;
+    return newAccount;
   });
-
-  console.log(balance);
-
-  const startDate = new Date(startPeriod);
-  const endDate = new Date(endPeriod);
 
   state.journalEntries.forEach((journalEntry) => {
     if (journalEntry.PERIOD >= startPeriod && journalEntry.PERIOD <= endPeriod) {
@@ -116,8 +110,6 @@ export default connect(state => {
       });
     }
   });
-
-  /* YOUR CODE GOES HERE */
 
   const totalCredit = balance.reduce((acc, entry) => acc + entry.CREDIT, 0);
   const totalDebit = balance.reduce((acc, entry) => acc + entry.DEBIT, 0);
