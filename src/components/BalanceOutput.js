@@ -99,7 +99,6 @@ export default connect(state => {
   state.journalEntries.forEach((journalEntry) => {
     const start = isNaN(startPeriod) ? true : journalEntry.PERIOD >= startPeriod;
     const end = isNaN(endPeriod) ? true : journalEntry.PERIOD <= endPeriod;
-
     if (start && end) {
       balance.forEach((account) => {
         if (account.ACCOUNT === journalEntry.ACCOUNT) {
