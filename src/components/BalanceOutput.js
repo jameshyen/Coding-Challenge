@@ -77,6 +77,19 @@ BalanceOutput.propTypes = {
 
 export default connect(state => {
   let balance = [];
+  const { userInput: { startAccount, endAccount } } = state;
+  console.log(state, startAccount, endAccount);
+  balance = state.accounts.filter((account) => {
+    return account.ACCOUNT >= startAccount && account.ACCOUNT <= endAccount;
+  });
+  console.log(balance);
+  balance = balance.map((account) => {
+    account.BALANCE = 0;
+    account.DESCRIPTION = account.LABEL;
+    delete account.LABEL;
+    return account;
+  });
+  console.log(balance);
 
   /* YOUR CODE GOES HERE */
 
